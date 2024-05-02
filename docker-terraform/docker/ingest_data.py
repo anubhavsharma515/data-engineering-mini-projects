@@ -9,8 +9,8 @@ from sqlalchemy import create_engine
 
 def clean_columns(df) -> pd.DataFrame:
 
-    df.tpep_pickup_time = pd.to_datetime(df.tpep_pickup_time)
-    df.tpep_dropoff_time = pd.to_datetime(df.tpep_dropoff_time)
+    df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
+    df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
     return df
 
 def main(params):
@@ -29,11 +29,12 @@ def main(params):
         csv_name = 'output.csv'
 
     try: 
+        #oddly cURL doesn't work. It doesn't support decompression automatically.
         subprocess.run(["wget", url, "-O", csv_name])
     except subprocess.CalledProcessError as e: 
-        print(f"An error occurred: {e}"):
+        print(f"An error occurred: {e}")
 
-    engine = create_engine(f"postgresql://{user}:{password}@{host}:{port}/{db}")
+    engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
 
     #In case the whole thing can't be read into memory at once, do it chunkwise.
     df_iter = pd.read_csv(csv_name, iterator=True, chunksize=100000)
