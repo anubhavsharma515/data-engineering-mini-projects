@@ -1,4 +1,3 @@
-./creds.json
-./terraform*
-./.terraform*
-
+!env.sh
+!main.tf
+!variables.tf
